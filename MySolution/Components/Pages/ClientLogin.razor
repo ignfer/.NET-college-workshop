@@ -6,8 +6,15 @@
 
 <InputText @bind-Value="Cedula"/>
 
+<RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
+
 <p>Cédula ingresada: @Cedula</p>
 
 @code {
 	private string Cedula { get; set; }
+	
+	void ButtonClicked()
+	{
+		// Handle the Click event of RadzenButton
+	}
 }
