@@ -1,0 +1,13 @@
+﻿@page "/client-login"
+
+<PageTitle>Login</PageTitle>
+
+<h3>Bienvenido, ingrese su cedula y espere a ser atendido.</h3>
+
+<InputText @bind-Value="Cedula"/>
+
+<p>Cédula ingresada: @Cedula</p>
+
+@code {
+	private string Cedula { get; set; }
+}
