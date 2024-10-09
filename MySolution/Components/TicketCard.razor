@@ -1,0 +1,27 @@
+﻿<div class="p-2 border border-1 border-primary rounded-2 gap-2 shadow-sm">
+    <div class="d-flex flex-column">
+        <RadzenText class="fw-bold fs-3">
+            Puesto
+        </RadzenText>
+        <RadzenText class="fw-bold fs-1 text-primary">
+            @Puesto
+        </RadzenText>
+    </div>
+    <div class="bg-primary border border-1"></div>
+    <div class="d-flex flex-column flex-grow-0">
+        <RadzenText class="fw-bold fs-3">
+            Ticket
+        </RadzenText>
+        <RadzenText class="fw-bold fs-1 text-primary">
+            @Ticket
+        </RadzenText>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Ticket { get; set; }
+
+    [Parameter]
+    public string Puesto { get; set; }
+}

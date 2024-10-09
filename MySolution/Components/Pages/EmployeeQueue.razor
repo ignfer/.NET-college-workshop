@@ -1,7 +1,37 @@
 ﻿@page "/employee-queue"
 
-<h3>EmployeeQueue - placeholder</h3>
+<PageTitle>Employee Queue</PageTitle>
 
+<RadzenCard class="p-4 rz-color-on-info rz-text-align-center w-100">
+	<RadzenStack Orientation="@Orientation.Vertical" Gap="16px" JustifyContent="@JustifyContent.Center" AlignItems="@AlignItems.Center">
+
+		<RadzenText class="fw-bold fs-2">
+			Visualización de turnos
+		</RadzenText>
+
+		<div class="w-100 rounded-2 d-flex flex-row gap-2">
+			<StatCard Subtitle="Espera promedio" Title="5m 43s"/>
+			<StatCard Subtitle="Ultimo movimiento" Title="2m 17s" />
+			<StatCard Subtitle="Clientes en espera" Title="17" />
+			<StatCard Subtitle="Puesto" Title="4" />
+		</div>
+
+		<RadzenCard class="bg-primary w-100 d-flex flex-row justify-content-center align-items-center gap-2 shadow-lg">
+			<RadzenText class="fw-bold fs-2 text-white user-select-none">
+				Llamar proximo cliente
+			</RadzenText>
+		</RadzenCard>
+
+		<div class="p-2 border border-1 border-primary w-100 rounded-2 d-flex flex-column align-items-start gap-2 shadow-sm">
+			<RadzenText class="fw-bold fs-1">
+				A continuación
+			</RadzenText>
+			<NextInLine Content="126 - 5.623xxx-x" />
+			<NextInLine Content="127 - 5.127xxx-x" />
+			<NextInLine Content="128 - 4.912xxx-x" />
+		</div>
+	</RadzenStack>
+</RadzenCard>
 @code {
 
 }

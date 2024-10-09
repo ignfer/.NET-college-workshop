@@ -2,19 +2,27 @@
 
 <PageTitle>Login</PageTitle>
 
-<h3>Bienvenido, ingrese su cedula y espere a ser atendido.</h3>
+<RadzenCard class="p-4 rz-color-on-info rz-text-align-center w-25">
+	<RadzenStack Orientation="@Orientation.Vertical" Gap="32px" JustifyContent="@JustifyContent.Center" AlignItems="@AlignItems.Center">
+		
+		<RadzenText
+			class="fw-bold fs-5"
+		>
+			Bienvenido, ingrese su cédula y espere a ser atendido.
+		</RadzenText>
 
-<InputText @bind-Value="Cedula"/>
+		<div class="d-flex flex-column align-items-end gap-2">
+			<RadzenText>
+				Ingrese su cedula de identidad (sin punto ni guiones)
+			</RadzenText>
+			<RadzenTextBox Placeholder="Ej: 12345678" Style="width: 100%" MaxLength="8" />
+			<RadzenButton class="fw-bold bg-primary" Text="Enviar" />
+		</div>
 
-<RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
-
-<p>Cédula ingresada: @Cedula</p>
+		<img width="350" src="/logo.png">
+	</RadzenStack>
+</RadzenCard>
 
 @code {
 	private string Cedula { get; set; }
-	
-	void ButtonClicked()
-	{
-		// Handle the Click event of RadzenButton
-	}
 }

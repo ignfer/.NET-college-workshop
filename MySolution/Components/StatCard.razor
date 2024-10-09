@@ -1,0 +1,16 @@
+﻿<div class="p-2 border border-1 border-primary w-100 rounded-2 d-flex flex-column gap-2 shadow-sm">
+	<RadzenText class="fw-bold fs-2">
+		@Subtitle
+	</RadzenText>
+	<RadzenText class="fw-bold fs-1 text-primary">
+		@Title
+	</RadzenText>
+</div>
+
+@code {
+	[Parameter]
+	public string Subtitle { get; set; }
+
+	[Parameter]
+	public string Title { get; set; }
+}
