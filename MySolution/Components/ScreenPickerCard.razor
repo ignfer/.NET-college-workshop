@@ -1,0 +1,28 @@
+﻿@using MySolution.Services
+@inject OfficeService OfficeService
+
+@code {
+    [Parameter]
+    public String Title { get; set; }
+
+    [Parameter]
+    public String ImgPath { get; set; }
+
+    [Parameter]
+    public String RedirectPath { get; set; }
+
+    [Parameter]
+    public int SelectedOfficeId { get; set; }
+}
+
+<a href=@(SelectedOfficeId > 0 ? RedirectPath : "#")>
+    <div class="border border-secondary p-2 rounded shadow-lg d-flex flex-column justify-content-center align-items-center">
+        <RadzenText class="fw-bold fs-6 text-primary">
+            @Title
+        </RadzenText>
+        <RadzenText class="fw-bold fs-6">
+            usando la oficina: @(SelectedOfficeId > 0 ? SelectedOfficeId.ToString() : "Oficina no válida.")
+        </RadzenText>
+        <img width="400" src=@ImgPath />
+    </div>
+</a>

@@ -1,11 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
+@code {
+    private bool showNavBar = true;   
+}
+
 <div class="page">
     <RadzenComponents @rendermode="InteractiveServer" />
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
+    @if(showNavBar){
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    }
+  
     <main>
         <article class="content px-4 d-flex justify-content-center">
             @Body

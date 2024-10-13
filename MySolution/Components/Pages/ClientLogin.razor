@@ -1,10 +1,25 @@
 ﻿@page "/client-login"
+@using MySolution.Services;
+@inject OfficeService OfficeService
+@inject ILogger<ClientLogin> Logger
+
+@code {
+	private string Cedula { get; set; }
+
+	int selectedOfficeId;
+
+	protected override void OnInitialized()
+	{
+		selectedOfficeId = OfficeService.SelectedOffice;
+	}
+
+}
 
 <PageTitle>Login</PageTitle>
 
 <RadzenCard class="p-4 rz-color-on-info rz-text-align-center w-25">
 	<RadzenStack Orientation="@Orientation.Vertical" Gap="32px" JustifyContent="@JustifyContent.Center" AlignItems="@AlignItems.Center">
-		
+		<OfficeIndicator/>
 		<RadzenText
 			class="fw-bold fs-5"
 		>
@@ -19,10 +34,6 @@
 			<RadzenButton class="fw-bold bg-primary" Text="Enviar" />
 		</div>
 
-		<img width="350" src="/logo.png">
+		<img width="250" src="/logo.png">
 	</RadzenStack>
 </RadzenCard>
-
-@code {
-	private string Cedula { get; set; }
-}

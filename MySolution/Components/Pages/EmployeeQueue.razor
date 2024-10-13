@@ -4,10 +4,13 @@
 
 <RadzenCard class="p-4 rz-color-on-info rz-text-align-center w-100">
 	<RadzenStack Orientation="@Orientation.Vertical" Gap="16px" JustifyContent="@JustifyContent.Center" AlignItems="@AlignItems.Center">
-
+		
+		<div class="d-flex flex-row justify-content-center align-items-center gap-2">
 		<RadzenText class="fw-bold fs-2">
 			Visualización de turnos
 		</RadzenText>
+			<OfficeIndicator />
+		</div>
 
 		<div class="w-100 rounded-2 d-flex flex-row gap-2">
 			<StatCard Subtitle="Espera promedio" Title="5m 43s"/>

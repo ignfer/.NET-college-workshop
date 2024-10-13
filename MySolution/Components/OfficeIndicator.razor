@@ -1,0 +1,19 @@
+﻿@using MySolution.Services
+@inject OfficeService OfficeService
+
+@code {
+	int selectedOfficeId;
+
+    protected override void OnInitialized()
+    {
+        selectedOfficeId = OfficeService.SelectedOffice;
+
+    }
+}
+
+<div class="d-flex border border-primary rounded shadow-lg p-2 justify-content-center align-items-center gap-2">
+   <img width="24" src="./ico-office.svg">
+    <RadzenText class="fw-bold fs-6">
+        Oficina seleccionada: @(selectedOfficeId > 0 ? selectedOfficeId.ToString() : "N/A")
+    </RadzenText>
+</div>
