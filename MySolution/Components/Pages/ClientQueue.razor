@@ -1,4 +1,5 @@
-﻿@using MySolution.Services;
+﻿@using MySolution.Models;
+@using MySolution.Services;
 @inject OfficeService OfficeService
 @rendermode InteractiveServer
 
@@ -7,6 +8,12 @@
 @code {
 	bool wantToSelect = true;
 	int selectedOfficeId;
+	Office office;
+
+	private void OnSelectedOfficeIdChanged(int newOfficeId) {
+		office = OfficeService.getQueueFromOfficeReadOnly(newOfficeId);
+	}
+	
 }
 
 <PageTitle>Client Queue</PageTitle>
@@ -18,7 +25,7 @@
 			<RadzenText class="fw-bold fs-2">
 				Visualización de turnos
 			</RadzenText>
-			<OfficePicker @bind-wantToSelect="wantToSelect" @bind-selectedOfficeId="selectedOfficeId" />
+			<OfficePicker @bind-wantToSelect="wantToSelect" selectedOfficeIdChanged="OnSelectedOfficeIdChanged"/>
 		</div>
 
 		<RadzenCard class="bg-primary w-100 d-flex flex-row justify-content-center align-items-center gap-2 shadow-lg">
@@ -42,9 +49,13 @@
 			<RadzenText class="fw-bold fs-1">
 				A continuación
 			</RadzenText>
-			<NextInLine Content="126 - 5.623xxx-x" />
-			<NextInLine Content="127 - 5.127xxx-x" />
-			<NextInLine Content="128 - 4.912xxx-x" />
+			@if (office != null)
+			{
+				@foreach (var client in office.WaitingClients)
+				{
+					<NextInLine Content="@($"{client.TicketNumber} - {client.TicketNumber}")" />
+				}
+			}
 		</div>
 		<div class="p-2 border border-1 border-primary w-100 rounded-2 d-flex flex-row gap-2">
 			<div class="w-25 rounded-2 d-flex flex-column gap-2">
@@ -54,20 +65,14 @@
 				<StatCard Subtitle="Puesto" Title="4" />
 			</div>
 			<div class="p-2 border border-1 border-primary w-75 rounded-2 d-flex flex-row flex-wrap gap-2 justify-content-start align-items-start">
-				<TicketCard Ticket="123" Puesto="1" />
-				<TicketCard Ticket="122" Puesto="2" />
-				<TicketCard Ticket="121" Puesto="3" />
-				<TicketCard Ticket="120" Puesto="4" />
-				<TicketCard Ticket="119" Puesto="5" />
-				<TicketCard Ticket="118" Puesto="6" />
-				<TicketCard Ticket="117" Puesto="7" />
-				<TicketCard Ticket="116" Puesto="8" />
-				<TicketCard Ticket="115" Puesto="9" />
-				<TicketCard Ticket="114" Puesto="10" />
-				<TicketCard Ticket="113" Puesto="11" />
-				<TicketCard Ticket="112" Puesto="12" />
+				@if (office != null)
+				{
+					@foreach (var desk in office.InProgressDesks)
+					{
+						<TicketCard Ticket="@desk.Client.TicketNumber" Puesto="@desk.Id" />
+					}
+				}
 			</div>
 		</div>
-
 	</RadzenStack>
 </RadzenCard>

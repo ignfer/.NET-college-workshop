@@ -1,4 +1,12 @@
-﻿<div class="p-1 border border-1 border-primary rounded-2 gap-1 shadow-sm">
+﻿@code {
+    [Parameter]
+    public int Ticket { get; set; }
+
+    [Parameter]
+    public int Puesto { get; set; }
+}
+
+<div class="p-1 border border-1 border-primary rounded-2 gap-1 shadow-sm">
     <div class="d-flex flex-column">
         <RadzenText class="fw-bold fs-5">
             Puesto
@@ -19,11 +27,3 @@
         </RadzenText>
     </div>
 </div>
-
-@code {
-    [Parameter]
-    public string Ticket { get; set; }
-
-    [Parameter]
-    public string Puesto { get; set; }
-}
