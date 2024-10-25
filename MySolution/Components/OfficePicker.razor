@@ -1,0 +1,64 @@
+﻿@using MySolution.Services
+@using MySolution.Models
+@inject OfficeService OfficeService
+@rendermode InteractiveServer
+
+@code {
+	[Parameter]
+	public int selectedOfficeId { get; set; }
+
+	[Parameter]
+	public bool wantToSelect { get; set; }
+
+	[Parameter]
+	public EventCallback<bool> wantToSelectChanged { get; set; }
+
+	[Parameter]
+	public EventCallback<int> selectedOfficeIdChanged { get; set; }
+
+	List<Office> offices;
+	String selectedOfficeName;
+
+	protected override void OnInitialized() {
+		offices = OfficeService.GetAllOffices();
+	}
+
+	private async Task ToggleWantToSelect() {
+		wantToSelect = !wantToSelect;
+		await wantToSelectChanged.InvokeAsync(wantToSelect);
+	}
+
+	private async Task OnOfficeSelected(ChangeEventArgs e) {
+		selectedOfficeId = int.Parse(e.Value.ToString());
+		await selectedOfficeIdChanged.InvokeAsync(selectedOfficeId);
+	}
+
+	protected override void OnParametersSet()
+	{
+		selectedOfficeName = OfficeService.GetSelectedOfficeName(selectedOfficeId);
+	}
+
+}
+
+<div>
+	@if (wantToSelect) {
+		<RadzenText class="fw-bold fs-6">
+			Seleccione la oficina sobre la que quiere operar
+		</RadzenText>
+
+		<select class="form-select mb-4" style="max-width: 400px; margin: auto;" @onchange="OnOfficeSelected">
+			<option value="" disabled selected>Seleccione una oficina</option>
+			@foreach (var office in offices)
+			{
+				<option value="@office.Id">@office.Name</option>
+			}
+		</select>
+	}
+
+	<div @onclick="ToggleWantToSelect" class="d-flex border border-primary rounded shadow-lg p-2 justify-content-center align-items-center gap-2">
+		<img width="24" src="./ico-office.svg">
+		<RadzenText class="fw-bold fs-6">
+			@selectedOfficeName
+		</RadzenText>
+	</div>
+</div>

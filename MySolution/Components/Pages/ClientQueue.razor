@@ -1,4 +1,13 @@
-﻿@page "/client-queue"
+﻿@using MySolution.Services;
+@inject OfficeService OfficeService
+@rendermode InteractiveServer
+
+@page "/client-queue"
+
+@code {
+	bool wantToSelect = true;
+	int selectedOfficeId;
+}
 
 <PageTitle>Client Queue</PageTitle>
 
@@ -9,7 +18,7 @@
 			<RadzenText class="fw-bold fs-2">
 				Visualización de turnos
 			</RadzenText>
-			<OfficeIndicator />
+			<OfficePicker @bind-wantToSelect="wantToSelect" @bind-selectedOfficeId="selectedOfficeId" />
 		</div>
 
 		<RadzenCard class="bg-primary w-100 d-flex flex-row justify-content-center align-items-center gap-2 shadow-lg">
@@ -62,6 +71,3 @@
 
 	</RadzenStack>
 </RadzenCard>
-@code {
-
-}

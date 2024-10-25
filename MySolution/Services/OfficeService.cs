@@ -6,29 +6,13 @@ namespace MySolution.Services
     public class OfficeService
     {
         private readonly ILogger<OfficeService> _logger;
-        private int _selectedOfficeId = -1;
-        public event Action OnChange;
 
         public OfficeService(ILogger<OfficeService> logger)
         {
             _logger = logger;
         }
 
-        public int SelectedOffice
-        {
-            get => _selectedOfficeId;
-            set
-            {
-                if (_selectedOfficeId != value)
-                {
-                    _logger.LogInformation($"[OFFICESERVICE] - _selectedOffice change from {_selectedOfficeId} to {value}");
-                    _selectedOfficeId = value;
-                    OnChange?.Invoke();
-                    _logger.LogInformation($"[OFFICESERVICE] - {GetOfficeById(1).Name}");
-                }
-            }
-        }
-
+        //TODO: read office list from database
         private List<Office> _offices = new List<Office>
         {
             new Office(1, "Maldonado - José Pedro Varela y Av. José Battle y Ordoñez"),
@@ -42,9 +26,13 @@ namespace MySolution.Services
 
         public String GetOfficeNameById(int id) => GetOfficeById(id).Name;
 
-        public String GetSelectedOfficeName(){
-            var office = GetOfficeById(_selectedOfficeId);
+        public String GetSelectedOfficeName(int id){
+            var office = GetOfficeById(id);
             return office != null ? office.Name : "N/A";
+        }
+
+        public void AddClientToQueue(int officeId, string clientCi) {
+            _logger.LogInformation($"Adding client {clientCi} to queue of office {officeId}");
         }
 
     }

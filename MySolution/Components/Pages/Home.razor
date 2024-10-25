@@ -5,21 +5,7 @@
 @inject OfficeService OfficeService
 
 @code {
-    int selectedOfficeId;
-    List<Office> offices;
 
-    protected override void OnInitialized()
-    {
-        offices = OfficeService.GetAllOffices();
-        selectedOfficeId = OfficeService.SelectedOffice;
-
-    }
-
-    private void OnOfficeChange(ChangeEventArgs e)
-    {
-        selectedOfficeId = int.Parse(e.Value.ToString());        
-        OfficeService.SelectedOffice = selectedOfficeId;
-    }
 }
 
 <PageTitle>Inicio</PageTitle>
@@ -32,17 +18,7 @@
     <RadzenText class="fw-bold fs-1 text-primary">
         Bienvenido/a
     </RadzenText>
-    <RadzenText class="fw-bold fs-4">
-        Seleccione la oficina sobre la que quiere operar
-    </RadzenText>
-
-    <select class="form-select mb-4" style="max-width: 400px; margin: auto;" @onchange="OnOfficeChange">
-        <option value="" disabled selected>Seleccione una oficina</option>
-        @foreach (var office in offices)
-        {
-            <option value="@office.Id">@office.Name</option>
-        }
-    </select>
+   
     <RadzenText class="fw-bold fs-4">
         Seleccione la pantalla que quiere utilizar
     </RadzenText>
@@ -52,28 +28,24 @@
             Title="[PARA CLIENTE] - Anunciarse y agregarse a la cola de espera"
             ImgPath="./screen-1.png" 
             RedirectPath="/client-login"
-            SelectedOfficeId="@selectedOfficeId"
         />
 
         <ScreenPickerCard 
             Title="[PARA CLIENTE] - Estado de la cola de espera"
             ImgPath="./screen-2.png" 
             RedirectPath="/client-queue"
-            SelectedOfficeId="@selectedOfficeId"
         />
 
         <ScreenPickerCard 
             Title="[PARA EMPLEADO] - Gestionar turnos de la cola de espera"
             ImgPath="./screen-3.png" 
             RedirectPath="/employee-queue"
-            SelectedOfficeId="@selectedOfficeId"
         />
 
         <ScreenPickerCard 
             Title="[PARA EMPLEADO QA] - Ver analisis de datos"
             ImgPath="./screen-4.png"
             RedirectPath="/employee-analytics" 
-            SelectedOfficeId="@selectedOfficeId"
         />
     </div>
 </RadzenStack>

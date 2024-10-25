@@ -10,12 +10,9 @@
 
     [Parameter]
     public String RedirectPath { get; set; }
-
-    [Parameter]
-    public int SelectedOfficeId { get; set; }
 }
 
-<a href=@(SelectedOfficeId > 0 ? RedirectPath : "#")>
+<a href=@RedirectPath>
     <div class="border border-secondary p-2 rounded shadow-lg d-flex flex-column justify-content-center align-items-center">
         <RadzenText class="fw-bold fs-6 text-primary">
             @Title

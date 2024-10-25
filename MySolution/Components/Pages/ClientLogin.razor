@@ -1,25 +1,38 @@
 ﻿@page "/client-login"
 @using MySolution.Services;
+@using MySolution.Models;
 @inject OfficeService OfficeService
-@inject ILogger<ClientLogin> Logger
+@rendermode InteractiveServer
 
 @code {
-	private string Cedula { get; set; }
+	public string ci { get; set; }
 
+	bool wantToSelect = true;
 	int selectedOfficeId;
+	private bool IsFormValid => selectedOfficeId != 0 && IsCedulaValid(ci);
 
-	protected override void OnInitialized()
-	{
-		selectedOfficeId = OfficeService.SelectedOffice;
+	protected void HandleAddClient() {
+		if (selectedOfficeId != 0 && IsCedulaValid(ci)) {
+			OfficeService.AddClientToQueue(selectedOfficeId, ci);
+		}
+		ci = "";
 	}
 
+	private bool IsCedulaValid(string ci) {
+		if (!string.IsNullOrWhiteSpace(ci))
+		{
+			return System.Text.RegularExpressions.Regex.IsMatch(ci, @"^\d{8}$");
+		}
+		return false;
+	}
 }
 
 <PageTitle>Login</PageTitle>
 
-<RadzenCard class="p-4 rz-color-on-info rz-text-align-center w-25">
+<RadzenCard class="p-4 rz-color-on-info rz-text-align-center w-50">
 	<RadzenStack Orientation="@Orientation.Vertical" Gap="32px" JustifyContent="@JustifyContent.Center" AlignItems="@AlignItems.Center">
-		<OfficeIndicator/>
+		<OfficePicker @bind-wantToSelect="wantToSelect" @bind-selectedOfficeId="selectedOfficeId" />
+
 		<RadzenText
 			class="fw-bold fs-5"
 		>
@@ -30,8 +43,8 @@
 			<RadzenText>
 				Ingrese su cedula de identidad (sin punto ni guiones)
 			</RadzenText>
-			<RadzenTextBox Placeholder="Ej: 12345678" Style="width: 100%" MaxLength="8" />
-			<div class="rounded bg-primary d-flex flex-row gap-2 p-2">
+			<RadzenTextBox Placeholder="Ej: 12345678" Style="width: 100%" MaxLength="8" @bind-value="@ci" />
+			<div class="rounded bg-primary d-flex flex-row gap-2 p-2 user-select-none @(IsFormValid ? "" : "disabled")" @onclick="IsFormValid ? HandleAddClient : null">
 				<RadzenText class="text-light">
 					Enviar
 				</RadzenText>
@@ -42,3 +55,10 @@
 		<img width="250" src="/logo.png">
 	</RadzenStack>
 </RadzenCard>
+
+<style>
+	.disabled {
+		opacity: 0.5; /* Opcional: cambiar la opacidad para indicar que está deshabilitado */
+		pointer-events: none; /* Deshabilita los eventos del ratón */
+	}
+</style>
