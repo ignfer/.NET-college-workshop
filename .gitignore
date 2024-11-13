@@ -1,10 +1,5 @@
 # Visual Studio
 .vscode/
-*.sln
-*.csproj
-*.user
-*.suo
-*.userprefs
 
 # Build results
 [Bb]in/
