@@ -1,0 +1,91 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Nacho\\source\\repos\\MySolution\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C3A7E392-51BE-4AC2-9D5F-D68BDCBD9BB0}|MySolution.csproj|c:\\users\\nacho\\source\\repos\\mysolution\\services\\officeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3A7E392-51BE-4AC2-9D5F-D68BDCBD9BB0}|MySolution.csproj|solutionrelative:services\\officeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3A7E392-51BE-4AC2-9D5F-D68BDCBD9BB0}|MySolution.csproj|c:\\users\\nacho\\source\\repos\\mysolution\\repositories\\officerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3A7E392-51BE-4AC2-9D5F-D68BDCBD9BB0}|MySolution.csproj|solutionrelative:repositories\\officerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C3A7E392-51BE-4AC2-9D5F-D68BDCBD9BB0}|MySolution.csproj|c:\\users\\nacho\\source\\repos\\mysolution\\models\\office.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C3A7E392-51BE-4AC2-9D5F-D68BDCBD9BB0}|MySolution.csproj|solutionrelative:models\\office.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:3:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:6:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Office.cs",
+              "DocumentMoniker": "C:\\Users\\Nacho\\source\\repos\\MySolution\\Models\\Office.cs",
+              "RelativeDocumentMoniker": "Models\\Office.cs",
+              "ToolTip": "C:\\Users\\Nacho\\source\\repos\\MySolution\\Models\\Office.cs",
+              "RelativeToolTip": "Models\\Office.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T02:55:24.828Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OfficeService.cs",
+              "DocumentMoniker": "C:\\Users\\Nacho\\source\\repos\\MySolution\\Services\\OfficeService.cs",
+              "RelativeDocumentMoniker": "Services\\OfficeService.cs",
+              "ToolTip": "C:\\Users\\Nacho\\source\\repos\\MySolution\\Services\\OfficeService.cs",
+              "RelativeToolTip": "Services\\OfficeService.cs",
+              "ViewState": "AQIAADEAAAAAAAAAAAAgwA4AAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T01:51:14.135Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OfficeRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Nacho\\source\\repos\\MySolution\\Repositories\\OfficeRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\OfficeRepository.cs",
+              "ToolTip": "C:\\Users\\Nacho\\source\\repos\\MySolution\\Repositories\\OfficeRepository.cs",
+              "RelativeToolTip": "Repositories\\OfficeRepository.cs",
+              "ViewState": "AQIAAAQAAAAAAAAAAAAAABMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-08T02:23:22.457Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
