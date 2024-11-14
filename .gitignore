@@ -1,5 +1,10 @@
 # Visual Studio
 .vscode/
+.vs/
+
+MySolution/.vs/
+
+*.vsidx
 
 # Build results
 [Bb]in/

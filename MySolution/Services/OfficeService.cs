@@ -16,7 +16,7 @@ namespace MySolution.Services
 		}
 		
         /*{
-            new Office(
+            new OfficePrev(
                 1,
                 "Maldonado - José Pedro Varela y Av. José Battle y Ordoñez",
                 new List<Desk> {
@@ -30,7 +30,7 @@ namespace MySolution.Services
                     new Client("66666666","Manuel",6),
                 }
             ),
-            new Office(
+            new OfficePrev(
                 2,
                 "Punta del Este - C25 y El Mesana",
 		        new List<Desk> {
@@ -44,7 +44,7 @@ namespace MySolution.Services
                     new Client("66666666","Emilio",6),
                 }
 	        ),
-            new Office(
+            new OfficePrev(
                 3, "San carlos - Carlos reyes y J de Dios Curbelo",
 		        new List<Desk> {
 			        new Desk(7, new Client("11111111","Raquel",1)),
@@ -60,9 +60,9 @@ namespace MySolution.Services
         };*/
 
 
-		public List<Office> GetAllOffices() => _officeRepository.GetOffices();
+		public List<OfficePrev> GetAllOffices() => _officeRepository.GetOffices();
 
-        public Office GetOfficeById(int id) => _officeRepository.GetOffices().FirstOrDefault(o => o.Id == id);
+        public OfficePrev GetOfficeById(int id) => _officeRepository.GetOffices().FirstOrDefault(o => o.Id == id);
 
         public String GetOfficeNameById(int id) => GetOfficeById(id).Name;
 
@@ -78,7 +78,7 @@ namespace MySolution.Services
 			_logger.LogInformation($"Removing client {clientCi} from queue of office {officeId}");
 		}
 
-        public Office getQueueFromOfficeReadOnly(int officeId)
+        public OfficePrev getQueueFromOfficeReadOnly(int officeId)
         {
 			_logger.LogInformation($"Getting read only queue of office {officeId}");
             return GetOfficeById(officeId);
