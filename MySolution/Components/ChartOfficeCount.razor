@@ -1,0 +1,47 @@
+﻿@using System.Timers
+@rendermode InteractiveServer
+
+@code {
+	private int officeCount = 0;
+	private Timer? timer;
+
+	protected override void OnInitialized() {
+		timer = new Timer(1000);
+		timer.Elapsed += UpdateOfficeCount;
+		timer.AutoReset = true;
+		timer.Enabled = true;
+	}
+
+	private void UpdateOfficeCount(object? sender, ElapsedEventArgs e){
+		InvokeAsync(() => {
+			//TODO: fetch this info from the backend
+			officeCount = new Random().Next(1, 10);
+			StateHasChanged();
+		});
+	}
+
+	public void Dispose(){
+		timer?.Dispose();
+	}
+}
+
+<div class="
+			p-2 
+			border 
+			border-1 
+			border-primary 
+			w-100 rounded-2 
+			shadow-sm
+			d-flex 
+			flex-col
+			flex-wrap
+			justify-content-center 
+			align-items-center"
+>
+	<RadzenText class="fw-bold fs-6 w-100 text-center">
+		Oficinas totales 
+	</RadzenText>
+	<RadzenText class="fw-bold fs-1 text-primary w-100 text-center">
+		@officeCount
+	</RadzenText>
+</div>

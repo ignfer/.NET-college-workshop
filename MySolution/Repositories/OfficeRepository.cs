@@ -16,7 +16,7 @@ namespace MySolution.Repositories
 			using (var connection = new SqliteConnection(_connectionString))
 			{
 				connection.Open();
-				string query = "SELECT Id, Name FROM offices";
+				string query = "SELECT id, Name FROM office";
 
 				using (var command = new SqliteCommand(query, connection))
 				using (var reader = command.ExecuteReader())

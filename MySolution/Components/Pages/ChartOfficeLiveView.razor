@@ -1,0 +1,80 @@
+﻿@using System.Timers
+@rendermode InteractiveServer
+
+@code {
+	private Timer? timer;
+
+	class DataItem
+	{
+		public string Office { get; set; }
+		public double People { get; set; }
+	}
+
+	DataItem[] waiting = Array.Empty<DataItem>();
+	DataItem[] notWaiting = Array.Empty<DataItem>();
+
+	protected override void OnInitialized() {
+		GenerateData();
+
+		timer = new Timer(500);
+		timer.Elapsed += UpdateData;
+		timer.AutoReset = true;
+		timer.Enabled = true;
+	}
+
+	private void UpdateData(object? sender, ElapsedEventArgs e) {
+		InvokeAsync(() => {
+			GenerateData();
+			StateHasChanged();
+		});
+	}
+
+	private void GenerateData() {
+		var random = new Random();
+		var offices = new[] { "Officina 1", "Officina 2", "Officina 3", "Officina 4" };
+
+		waiting = offices.Select(o => new DataItem {
+				Office = o,
+				People = random.Next(1, 31)
+			})
+			.ToArray();
+
+		notWaiting = offices.Select(o => new DataItem {
+				Office = o,
+				People = random.Next(1, 31)
+			})
+			.ToArray();
+	}
+
+	public void Dispose(){
+		timer?.Dispose();
+	}
+}
+
+<div class="
+			p-2 
+			border 
+			border-1 
+			border-primary 
+			rounded-2 
+			shadow-sm
+			d-flex 
+			flex-col
+			flex-wrap
+			w-100 
+			justify-content-center 
+			align-items-center"
+>
+	<RadzenChart class="w-100">
+		<RadzenColumnSeries Fill="#b02715" Data="@waiting" CategoryProperty="Office" Title="Esperando" LineType="LineType.Dashed" ValueProperty="People">
+			<RadzenSeriesDataLabels/>
+		</RadzenColumnSeries>
+		<RadzenColumnSeries Fill="#76cf42" Data="@notWaiting" CategoryProperty="Office" Title="Atendidos" ValueProperty="People">
+			<RadzenSeriesDataLabels/>
+		</RadzenColumnSeries>
+		<RadzenColumnOptions Radius="5" />
+		<RadzenValueAxis>
+			<RadzenGridLines Visible="true" />
+		</RadzenValueAxis>
+	</RadzenChart>
+</div>
