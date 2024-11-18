@@ -69,8 +69,10 @@ void RunTestCases(IServiceProvider services)
     // Add to QUEUE
     Console.WriteLine("Adding to QUEUE: 123456");
     queueService.AddUserToQueue("123456");
+    Thread.Sleep(1000);
     Console.WriteLine("Adding to QUEUE: 222222");
     queueService.AddUserToQueue("222222");
+    Thread.Sleep(1000);
 
 
     // Visualize Queue
@@ -95,18 +97,41 @@ void RunTestCases(IServiceProvider services)
     }
 
     // Get Last Called Appointment
-    Console.WriteLine("Last Called Appointment:");
+    Console.WriteLine("Last Called Appointment 1:");
     var lastAppointment = appointmentService.GetLastCalledAppointment();
+    Console.WriteLine($"Appointment ID: {lastAppointment.Id}, CI Number: {lastAppointment.Queue.CINumber}");
+
+    // Ending appointment with Id 1
+    Console.WriteLine($"Ending Last Called Appointment with Id: {lastAppointment.Id}");
+    appointmentService.EndAppointment(lastAppointment.Id, "Puesto 1");
+
+    // Next in Queue should be called on previous line, checking now
+    Console.WriteLine("Last Called Appointment 2:");
+    lastAppointment = appointmentService.GetLastCalledAppointment();
     Console.WriteLine(lastAppointment != null
         ? $"Appointment ID: {lastAppointment.Id}, CI Number: {lastAppointment.Queue.CINumber}"
         : "No appointments found.");
+
+    Console.WriteLine("Queue Visualization 3:");
+    var queue3 = queueService.GetQueue();
+    foreach (var item in queue3)
+    {
+        Console.WriteLine($"Id: {item.Id}, CI: {item.CINumber}, Status: {item.Status}, Date: {item.Date}");
+    }
+
+    Console.WriteLine("Appointment Visualization 1:");
+    var appointments1 = appointmentService.GetAppointments();
+    foreach (var item in appointments1)
+    {
+        Console.WriteLine($"Id: {item.Id}, CI: {item.Queue.CINumber}, Start Date: {item.StartDate}, End Date: {item.EndDate}");
+    }
 
     // Appointments in Waiting
     var waitingCount = queueService.GetWaitingQueue();
     Console.WriteLine($"Queue in Waiting: {waitingCount}");
 
     // Average Waiting Time
-    var averageWaitingTime = queueService.GetAverageWaitingTime();
+    var averageWaitingTime = appointmentService.GetAverageWaitingTime();
     Console.WriteLine($"Average Waiting Time: {averageWaitingTime} minutes");
 
     // Appointment Stats

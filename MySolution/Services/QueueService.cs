@@ -1,4 +1,5 @@
-﻿using MySolution.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using MySolution.Repositories;
 
 namespace MySolution.Services
 {
@@ -43,25 +44,11 @@ namespace MySolution.Services
                 .Count(q => q.Status == "Waiting");
         }
 
-        // TODO
-        public double GetAverageWaitingTime()
-        {
-            var completedQueues = _queueRepository.GetAll()
-                .Where(q => q.Status == "Completed")
-                .ToList();
-
-            if (!completedQueues.Any())
-                return 0;
-
-            return completedQueues
-                .Average(q => (DateTime.Now - q.Date).TotalMinutes);
-        }
-
         public Queue? GetNextInQueue()
         {
             var waitingQueues = _queueRepository.GetAll()
                 .Where(q => q.Status == "Waiting")
-                .OrderByDescending(q => q.Date)
+                .OrderBy(q => q.Date)
                 .Select(q => new Queue
                 {
                     Id = q.Id,
@@ -71,6 +58,11 @@ namespace MySolution.Services
                 });
 
             return waitingQueues.FirstOrDefault();
+        }
+
+        public void SetCompleted(long queueId)
+        {
+            _queueRepository.SetCompleted(queueId);
         }
     }
 }

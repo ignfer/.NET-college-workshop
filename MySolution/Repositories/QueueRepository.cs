@@ -15,15 +15,12 @@ namespace MySolution.Repositories
 
         public IEnumerable<Queue> GetAll()
         {
-            return _context.Queues
-                .AsNoTracking()
-                .ToList();
+            return _context.Queues;
         }
 
         public Queue? GetById(long id)
         {
             return _context.Queues
-                .AsNoTracking()
                 .FirstOrDefault(q => q.Id == id);
         }
 
@@ -33,10 +30,14 @@ namespace MySolution.Repositories
             _context.SaveChanges();
         }
 
-        public void Update(Queue queue)
+        public void SetCompleted(long queueId)
         {
-            _context.Queues.Update(queue);
-            _context.SaveChanges();
+            var queue = _context.Queues.FirstOrDefault(q => q.Id == queueId);
+            if (queue != null)
+            {
+                queue.Status = "Completed";
+                _context.SaveChanges();
+            }
         }
     }
 

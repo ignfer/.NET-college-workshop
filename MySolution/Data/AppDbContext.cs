@@ -39,8 +39,8 @@ namespace MySolution.Data
 
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Desk) 
-                .WithOne() 
-                .HasForeignKey<Appointment>(a => a.DeskId)
+                .WithMany(d => d.Appointments)
+                .HasForeignKey(a => a.DeskId) 
                 .IsRequired(true);
 
             // Queue entity constraints
