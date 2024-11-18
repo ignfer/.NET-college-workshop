@@ -1,23 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace MySolution.Models
+[Table("queue")]
+public class Queue
 {
-    [Table("queue")]
-    public class Queue
-    {
-        [Column("id")]
-        public long Id { get; set; }
+    [Key]
+    [Column("id")]
+    public long Id { get; set; }
 
-        [Column("date")]
-        public DateTime Date { get; set; }
+    [Column("date")]
+    [Required]
+    public DateTime Date { get; set; }
 
-        [Column("position")]
-        public int Position { get; set; }
+    [Column("status")]
+    [Required]
+    public string Status { get; set; }
 
-        [Column("status")]
-        public string Status { get; set; }
-
-        public Position PositionEntity { get; set; }
-    }
-
+    [Column("ci_number")]
+    [Required]
+    public string CINumber { get; set; }
 }
