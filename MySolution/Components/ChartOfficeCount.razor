@@ -1,47 +1,71 @@
 ﻿@using System.Timers
+@using MySolution.Services
+@inject AppointmentService AppointmentService
+@implements IDisposable
 @rendermode InteractiveServer
 
 @code {
 	private int officeCount = 0;
 	private Timer? timer;
+	private int lastHour = 0;
+	private int lastWeek = 0;
+	private int lastMonth = 0;
 
 	protected override void OnInitialized() {
 		timer = new Timer(1000);
-		timer.Elapsed += UpdateOfficeCount;
+		timer.Elapsed += UpdateQueue;
 		timer.AutoReset = true;
 		timer.Enabled = true;
 	}
 
-	private void UpdateOfficeCount(object? sender, ElapsedEventArgs e){
-		InvokeAsync(() => {
-			//TODO: fetch this info from the backend
-			officeCount = new Random().Next(1, 10);
-			StateHasChanged();
-		});
+	private void UpdateQueue(object? sender, ElapsedEventArgs e)
+	{
+		try
+		{
+			InvokeAsync(() =>
+			{
+				//TODO: fetch this info from the backend
+				officeCount = new Random().Next(1, 10);
+
+				var stats = AppointmentService.GetAppointmentStats();
+				lastHour= stats.LastHour;
+				lastWeek= stats.LastWeek;
+				lastMonth= stats.LastMonth;
+
+				StateHasChanged();
+			});
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error in ChartOfficeCount: {ex.Message}");
+		}
 	}
 
-	public void Dispose(){
-		timer?.Dispose();
+	public void Dispose()
+	{
+		if (timer != null)
+		{
+			timer.Stop();
+			timer.Dispose();
+		}
 	}
 }
 
 <div class="
 			p-2 
+			gap-2
 			border 
 			border-1 
 			border-primary 
-			w-100 rounded-2 
+			w-100 
+			rounded-2 
 			shadow-sm
 			d-flex 
-			flex-col
-			flex-wrap
+			flex-row
 			justify-content-center 
 			align-items-center"
 >
-	<RadzenText class="fw-bold fs-6 w-100 text-center">
-		Oficinas totales 
-	</RadzenText>
-	<RadzenText class="fw-bold fs-1 text-primary w-100 text-center">
-		@officeCount
-	</RadzenText>
+		<StatCard Subtitle="Ultima Hora" Title="@lastHour.ToString()"/>
+		<StatCard Subtitle="Ultima Semana" Title="@lastWeek.ToString()"/>
+		<StatCard Subtitle="Ultimo Mes" Title="@lastMonth.ToString()"/>
 </div>

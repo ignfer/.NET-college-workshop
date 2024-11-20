@@ -1,20 +1,76 @@
-﻿@using MySolution.Models;
+﻿@using System.Timers
+@using Microsoft.EntityFrameworkCore
+@using MySolution.Data
+@using MySolution.Models;
 @using MySolution.Services;
-@inject OfficeService OfficeService
+@inject QueueService QueueService
+@inject AppointmentService AppointmentService
+@implements IDisposable
 @rendermode InteractiveServer
 
 @page "/client-queue"
 
 @code {
-	bool wantToSelect = true;
-	int selectedOfficeId;
-	OfficePrev office;
+	List<String> WaitingClients = new List<String>();
+	List<String> OngoingClients = new List<String>();
+	private Timer? timer;
+	double averageWaitingTime = 0;
 
-	private void OnSelectedOfficeIdChanged(int newOfficeId) {
-		office = OfficeService.getQueueFromOfficeReadOnly(newOfficeId);
+	protected override void OnInitialized()
+	{
+		timer = new Timer(1000);
+		timer.Elapsed += UpdateQueue;
+		timer.AutoReset = true;
+		timer.Enabled = true;
 	}
-	
+
+	private void UpdateQueue(object? sender, ElapsedEventArgs e)
+	{
+		try 
+		{
+			InvokeAsync(() => 
+			{
+				var queue = QueueService.GetQueue();
+				var appointments = AppointmentService.GetAppointments();
+				WaitingClients.Clear();
+				OngoingClients.Clear();
+
+				foreach (var item in queue)
+				{
+					if (item.Status == "Waiting")
+					{
+						WaitingClients.Add($"{item.Id} - {item.CINumber}");
+					}
+
+				}
+
+				foreach (var item in appointments)
+				{
+					Console.WriteLine($"Id: {item.Id}, CI: {item.Queue.CINumber}, Start Date: {item.StartDate}, End Date: {item.EndDate}");
+					OngoingClients.Add($"{item.Id} - {item.Queue.CINumber}");
+				}
+
+				averageWaitingTime = AppointmentService.GetAverageWaitingTime();
+
+				StateHasChanged();
+			});
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error in UpdateQueue: {ex.Message}");
+		}
+	}
+
+	public void Dispose()
+	{
+		if (timer != null)
+		{
+			timer.Stop();
+			timer.Dispose();
+		}
+	}
 }
+
 
 <PageTitle>Client Queue</PageTitle>
 
@@ -25,7 +81,6 @@
 			<RadzenText class="fw-bold fs-2">
 				Visualización de turnos
 			</RadzenText>
-			<OfficePicker @bind-wantToSelect="wantToSelect" selectedOfficeIdChanged="OnSelectedOfficeIdChanged"/>
 		</div>
 
 		<RadzenCard class="bg-primary w-100 d-flex flex-row justify-content-center align-items-center gap-2 shadow-lg">
@@ -49,28 +104,22 @@
 			<RadzenText class="fw-bold fs-1">
 				A continuación
 			</RadzenText>
-			@if (office != null)
-			{
-				@foreach (var client in office.WaitingClients)
+			<div class="d-flex gap-1 flex-wrap">
+				@foreach (var client in WaitingClients)
 				{
-					<NextInLine Content="@($"{client.TicketNumber} - {client.Ci}")" />
+					<NextInLine Content="@($"{client}")" />
 				}
-			}
+			</div>
 		</div>
 		<div class="p-2 border border-1 border-primary w-100 rounded-2 d-flex flex-row gap-2">
 			<div class="w-25 rounded-2 d-flex flex-column gap-2">
-				<StatCard Subtitle="Espera promedio" Title="5m 43s" />
-				<StatCard Subtitle="Ultimo movimiento" Title="2m 17s" />
-				<StatCard Subtitle="Clientes en espera" Title="17" />
-				<StatCard Subtitle="Puesto" Title="4" />
+				<StatCard Subtitle="Espera promedio" Title="@($"{averageWaitingTime.ToString("F0")} minutos")" />
+				<StatCard Subtitle="Clientes en espera" Title="@WaitingClients.Count().ToString()"/>
 			</div>
 			<div class="p-2 border border-1 border-primary w-75 rounded-2 d-flex flex-row flex-wrap gap-2 justify-content-start align-items-start">
-				@if (office != null)
+				@foreach (var client in OngoingClients)
 				{
-					@foreach (var desk in office.InProgressDesks)
-					{
-						<TicketCard Ticket="@desk.Client.TicketNumber" Puesto="@desk.Id" />
-					}
+					<TicketCard Ticket="@client" Puesto="@client" />
 				}
 			</div>
 		</div>

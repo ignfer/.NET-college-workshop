@@ -1,7 +1,11 @@
 ﻿@using System.Timers
+@using Services
+@inject QueueService QueueService
+@implements IDisposable
 @rendermode InteractiveServer
 
 @code {
+	private int WaitingClients = 0;
 	private Timer? timer;
 
 	class DataItem
@@ -11,43 +15,57 @@
 	}
 
 	DataItem[] waiting = Array.Empty<DataItem>();
-	DataItem[] notWaiting = Array.Empty<DataItem>();
 
-	protected override void OnInitialized() {
-		GenerateData();
-
-		timer = new Timer(500);
-		timer.Elapsed += UpdateData;
+	protected override void OnInitialized()
+	{
+		timer = new Timer(1000);
+		timer.Elapsed += UpdateQueue;
 		timer.AutoReset = true;
 		timer.Enabled = true;
 	}
 
-	private void UpdateData(object? sender, ElapsedEventArgs e) {
-		InvokeAsync(() => {
-			GenerateData();
-			StateHasChanged();
-		});
+	private void UpdateQueue(object? sender, ElapsedEventArgs e)
+	{
+		try
+		{
+			InvokeAsync(() =>
+			{
+				var queue = QueueService.GetQueue();
+				WaitingClients = 0;
+
+				foreach (var item in queue)
+				{
+					if (item.Status == "Waiting")
+					{
+						WaitingClients++;
+					}
+
+				}
+
+				var offices = new[] { "Officina 1"};
+
+				waiting = offices.Select(o => new DataItem {
+						Office = o,
+						People = WaitingClients
+					})
+					.ToArray();
+
+				StateHasChanged();
+			});
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error in UpdateQueue: {ex.Message}");
+		}
 	}
 
-	private void GenerateData() {
-		var random = new Random();
-		var offices = new[] { "Officina 1", "Officina 2", "Officina 3", "Officina 4" };
-
-		waiting = offices.Select(o => new DataItem {
-				Office = o,
-				People = random.Next(1, 31)
-			})
-			.ToArray();
-
-		notWaiting = offices.Select(o => new DataItem {
-				Office = o,
-				People = random.Next(1, 31)
-			})
-			.ToArray();
-	}
-
-	public void Dispose(){
-		timer?.Dispose();
+	public void Dispose()
+	{
+		if (timer != null)
+		{
+			timer.Stop();
+			timer.Dispose();
+		}
 	}
 }
 
@@ -67,9 +85,6 @@
 >
 	<RadzenChart class="w-100">
 		<RadzenColumnSeries Fill="#b02715" Data="@waiting" CategoryProperty="Office" Title="Esperando" LineType="LineType.Dashed" ValueProperty="People">
-			<RadzenSeriesDataLabels/>
-		</RadzenColumnSeries>
-		<RadzenColumnSeries Fill="#76cf42" Data="@notWaiting" CategoryProperty="Office" Title="Atendidos" ValueProperty="People">
 			<RadzenSeriesDataLabels/>
 		</RadzenColumnSeries>
 		<RadzenColumnOptions Radius="5" />

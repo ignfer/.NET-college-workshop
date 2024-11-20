@@ -2,36 +2,41 @@
 @using MySolution.Services;
 @using MySolution.Models;
 @inject OfficeService OfficeService
+@inject QueueService QueueService
 @rendermode InteractiveServer
 
 @code {
 	public string ci { get; set; }
 
 	bool wantToSelect = true;
-	int selectedOfficeId;
-	private bool IsFormValid => selectedOfficeId != 0 && IsCedulaValid(ci);
-
-	protected void HandleAddClient() {
-		if (selectedOfficeId != 0 && IsCedulaValid(ci)) {
-			OfficeService.AddClientToQueue(selectedOfficeId, ci);
-		}
-		ci = "";
-	}
+	private bool IsFormValid => IsCedulaValid(ci);
 
 	private bool IsCedulaValid(string ci) {
-		if (!string.IsNullOrWhiteSpace(ci))
-		{
+		if (!string.IsNullOrWhiteSpace(ci)) {
 			return System.Text.RegularExpressions.Regex.IsMatch(ci, @"^\d{8}$");
 		}
 		return false;
 	}
+	
+	protected void HandleAddClient() {
+		if (IsCedulaValid(ci)) {
+			QueueService.AddUserToQueue(ci);
+		}
+		ci = "";
+	}
 }
+
+<style>
+	.disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+</style>
 
 <PageTitle>Login</PageTitle>
 
 <RadzenCard class="p-4 rz-color-on-info rz-text-align-center w-50">
 	<RadzenStack Orientation="@Orientation.Vertical" Gap="32px" JustifyContent="@JustifyContent.Center" AlignItems="@AlignItems.Center">
-		<OfficePicker @bind-wantToSelect="wantToSelect" @bind-selectedOfficeId="selectedOfficeId" />
 
 		<RadzenText
 			class="fw-bold fs-5"
@@ -55,10 +60,3 @@
 		<img width="250" src="/logo.png">
 	</RadzenStack>
 </RadzenCard>
-
-<style>
-	.disabled {
-		opacity: 0.5; /* Opcional: cambiar la opacidad para indicar que está deshabilitado */
-		pointer-events: none; /* Deshabilita los eventos del ratón */
-	}
-</style>
