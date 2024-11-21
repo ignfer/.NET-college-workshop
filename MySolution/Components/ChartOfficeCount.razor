@@ -5,14 +5,13 @@
 @rendermode InteractiveServer
 
 @code {
-	private int officeCount = 0;
 	private Timer? timer;
 	private int lastHour = 0;
 	private int lastWeek = 0;
 	private int lastMonth = 0;
 
 	protected override void OnInitialized() {
-		timer = new Timer(1000);
+		timer = new Timer(200);
 		timer.Elapsed += UpdateQueue;
 		timer.AutoReset = true;
 		timer.Enabled = true;
@@ -24,8 +23,6 @@
 		{
 			InvokeAsync(() =>
 			{
-				//TODO: fetch this info from the backend
-				officeCount = new Random().Next(1, 10);
 
 				var stats = AppointmentService.GetAppointmentStats();
 				lastHour= stats.LastHour;

@@ -25,7 +25,8 @@ namespace MySolution.Services
                 Id = a.Id,
                 StartDate = a.StartDate,
                 EndDate = a.EndDate,
-                Queue = a.Queue
+                Queue = a.Queue,
+                Desk = a.Desk 
             });
         }
 

@@ -1,12 +1,95 @@
-﻿@using MySolution.Services;
-@inject OfficeService OfficeService
+﻿@using System.Timers
+@using MySolution.Repositories
+@using MySolution.Services;
+@inject QueueService QueueService
+@inject AppointmentService AppointmentService
+@inject DeskRepository DeskRepository
+@implements IDisposable
 @rendermode InteractiveServer
 
 @page "/employee-queue"
 
 @code {
+	List<String> WaitingClients = new List<String>();
+	List<String> OngoingClients = new List<String>();
+	private Timer? timer;
+	double averageWaitingTime = 0;
 	bool wantToSelect = true;
-	int selectedOfficeId;
+	IEnumerable<Desk> desks;
+	string selectedDeskName = "Puesto 1";
+
+	protected override void OnInitialized()
+	{
+		desks = DeskRepository.GetAll();
+		timer = new Timer(200);
+		timer.Elapsed += UpdateQueue;
+		timer.AutoReset = true;
+		timer.Enabled = true;
+	}
+
+	private void UpdateQueue(object? sender, ElapsedEventArgs e)
+	{
+		try
+		{
+			InvokeAsync(() =>
+			{
+				var queue = QueueService.GetQueue();
+				var appointments = AppointmentService.GetAppointments();
+
+				WaitingClients = queue
+					.Where(item => item.Status == "Waiting")
+					.Select(item => $"{item.Id} - {item.CINumber}")
+					.ToList();
+
+				OngoingClients = appointments
+					.Select(item => $"{item.Id} - {item.Queue.CINumber}")
+					.ToList();
+
+
+				averageWaitingTime = AppointmentService.GetAverageWaitingTime();
+
+				StateHasChanged();
+			});
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error in UpdateQueue: {ex.Message}");
+		}
+	}
+
+	public void Dispose()
+	{
+		if (timer != null)
+		{
+			timer.Stop();
+			timer.Dispose();
+		}
+	}
+	
+	public void CallNextClient()
+	{
+		var apointments = AppointmentService.GetAppointments();
+		if (apointments.Count() == 0)
+		{
+			AppointmentService.GetNextInQueue(selectedDeskName);
+		}
+		else
+		{
+			var lastAppointment = AppointmentService.GetLastCalledAppointment();
+			AppointmentService.EndAppointment(lastAppointment.Id, selectedDeskName);
+		}
+		StateHasChanged();
+	}
+
+	/*
+	 <select @bind="selectedDeskName" class="form-select">
+	   	<option value="" disabled selected>-- Seleccione un puesto --</option>
+	   	@foreach (var desk in desks)
+	   	{
+	   		<option value="@desk.Name">@desk.Name</option>
+	   	}
+	   </select>
+	 */
 }
 
 <PageTitle>Employee Queue</PageTitle>
@@ -16,31 +99,35 @@
 		
 		<div class="d-flex flex-row justify-content-center align-items-center gap-2">
 			<RadzenText class="fw-bold fs-2">
-				Visualización de turnos
+				Puesto de atención
 			</RadzenText>
-			<OfficePicker @bind-wantToSelect="wantToSelect" @bind-selectedOfficeId="selectedOfficeId"/>
 		</div>
-
-		<div class="w-100 rounded-2 d-flex flex-row gap-2">
-			<StatCard Subtitle="Espera promedio" Title="5m 43s"/>
-			<StatCard Subtitle="Ultimo movimiento" Title="2m 17s" />
-			<StatCard Subtitle="Clientes en espera" Title="17" />
-			<StatCard Subtitle="Puesto" Title="4" />
-		</div>
-
-		<RadzenCard class="bg-primary w-100 d-flex flex-row justify-content-center align-items-center gap-2 shadow-lg">
+		
+		<RadzenCard 
+			@onclick="@CallNextClient"
+			class="bg-primary w-100 d-flex flex-row justify-content-center align-items-center gap-2 shadow-lg">
 			<RadzenText class="fw-bold fs-2 text-white user-select-none">
 				Llamar proximo cliente
 			</RadzenText>
 		</RadzenCard>
+		
+		<div class="w-100 d-flex gap-2">
+			<div class="w-25 rounded-2 d-flex flex-column gap-2">
+				<StatCard Subtitle="Espera promedio" Title="@($"{averageWaitingTime.ToString("F0")} minutos")" />
+				<StatCard Subtitle="Clientes en espera" Title="@WaitingClients.Count().ToString()" />
+			</div>
 
-		<div class="p-2 border border-1 border-primary w-100 rounded-2 d-flex flex-column align-items-start gap-2 shadow-sm">
-			<RadzenText class="fw-bold fs-1">
-				A continuación
-			</RadzenText>
-			<NextInLine Content="126 - 5.623xxx-x" />
-			<NextInLine Content="127 - 5.127xxx-x" />
-			<NextInLine Content="128 - 4.912xxx-x" />
+			<div class="w-75 p-2 border border-1 border-primary rounded-2 d-flex flex-column align-items-start gap-2 shadow-sm">
+				<RadzenText class="fw-bold fs-1">
+					A continuación
+				</RadzenText>
+				<div class="d-flex gap-1 flex-wrap">
+					@foreach (var client in WaitingClients)
+					{
+						<NextInLine Content="@($"{client}")" />
+					}
+				</div>
+			</div>
 		</div>
 	</RadzenStack>
 </RadzenCard>

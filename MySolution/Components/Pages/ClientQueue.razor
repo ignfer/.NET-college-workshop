@@ -1,7 +1,4 @@
 ﻿@using System.Timers
-@using Microsoft.EntityFrameworkCore
-@using MySolution.Data
-@using MySolution.Models;
 @using MySolution.Services;
 @inject QueueService QueueService
 @inject AppointmentService AppointmentService
@@ -11,14 +8,24 @@
 @page "/client-queue"
 
 @code {
+
+	public class OngoingClientItem
+	{
+		public long Id { get; set; }
+		public string CINumber { get; set; }
+		public string DeskName { get; set; }
+	}
+
 	List<String> WaitingClients = new List<String>();
-	List<String> OngoingClients = new List<String>();
+	List<OngoingClientItem> OngoingClients = new List<OngoingClientItem>();
 	private Timer? timer;
 	double averageWaitingTime = 0;
+	private string LastAppointment = "";
+	private string LastAppointmentDesk = "";
 
 	protected override void OnInitialized()
 	{
-		timer = new Timer(1000);
+		timer = new Timer(200);
 		timer.Elapsed += UpdateQueue;
 		timer.AutoReset = true;
 		timer.Enabled = true;
@@ -28,29 +35,39 @@
 	{
 		try 
 		{
-			InvokeAsync(() => 
+			InvokeAsync(async() => 
 			{
 				var queue = QueueService.GetQueue();
 				var appointments = AppointmentService.GetAppointments();
-				WaitingClients.Clear();
-				OngoingClients.Clear();
 
 				foreach (var item in queue)
 				{
-					if (item.Status == "Waiting")
+					Console.WriteLine(item.Status);
+				}
+
+				WaitingClients = queue
+					.Where(item => item.Status == "Waiting")
+					.Select(item => $"{item.Id} - {item.CINumber}")
+					.ToList();
+
+				OngoingClients = appointments
+					.Where(item => item.EndDate == null)
+					.Select(item => new OngoingClientItem
 					{
-						WaitingClients.Add($"{item.Id} - {item.CINumber}");
-					}
-
-				}
-
-				foreach (var item in appointments)
-				{
-					Console.WriteLine($"Id: {item.Id}, CI: {item.Queue.CINumber}, Start Date: {item.StartDate}, End Date: {item.EndDate}");
-					OngoingClients.Add($"{item.Id} - {item.Queue.CINumber}");
-				}
+						Id = item.Id,
+						CINumber = item.Queue.CINumber,
+						DeskName = item.Desk.Name
+					})
+					.ToList();
 
 				averageWaitingTime = AppointmentService.GetAverageWaitingTime();
+
+				var lastAppointment = AppointmentService.GetLastCalledAppointment();
+				if (lastAppointment != null)
+				{
+					LastAppointment = ($"{lastAppointment?.Id} - {lastAppointment.Queue?.CINumber}");
+					LastAppointmentDesk = ($"{lastAppointment.Desk.Name}");
+				}
 
 				StateHasChanged();
 			});
@@ -89,14 +106,14 @@
 				<img width="48" src="./ico-ticket-white.svg">
 			</RadzenText>
 			<RadzenText class="fw-bold fs-1 text-white">
-				125
+				@LastAppointment
 			</RadzenText>
 			<RadzenText class="fw-bold fs-2 text-white d-flex justify-content-center align-items-center">
-				por favor dirigirse al puesto
+				por favor dirigirse al
 				<img width="48" src="./ico-briefcase-white.svg">
 			</RadzenText>
 			<RadzenText class="fw-bold fs-1 text-white">
-				4
+				@LastAppointmentDesk
 			</RadzenText>
 		</RadzenCard>
 
@@ -119,7 +136,7 @@
 			<div class="p-2 border border-1 border-primary w-75 rounded-2 d-flex flex-row flex-wrap gap-2 justify-content-start align-items-start">
 				@foreach (var client in OngoingClients)
 				{
-					<TicketCard Ticket="@client" Puesto="@client" />
+					<TicketCard Ticket="@($"{client.Id}-{client.CINumber}")" Puesto="@client.DeskName" />
 				}
 			</div>
 		</div>

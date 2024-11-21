@@ -42,7 +42,8 @@ using (var scope = app.Services.CreateScope())
     Console.WriteLine("Database created or already exists.");
 
     // Run test cases
-    RunTestCases(scope.ServiceProvider);
+    //RunTestCases(scope.ServiceProvider);
+    RunSetup(scope.ServiceProvider);
 }
 app.UseHttpsRedirection();
 
@@ -66,8 +67,11 @@ void RunTestCases(IServiceProvider services)
     Console.WriteLine("Adding Puesto 1");
     deskService.AddDeskIfNotExists("Puesto 1");
 
-    // Add to QUEUE
-    Console.WriteLine("Adding to QUEUE: 123456");
+    Console.WriteLine("Adding Puesto 2");
+    deskService.AddDeskIfNotExists("Puesto 2");
+
+	// Add to QUEUE
+	Console.WriteLine("Adding to QUEUE: 123456");
     queueService.AddUserToQueue("123456");
     Thread.Sleep(1000);
     Console.WriteLine("Adding to QUEUE: 222222");
@@ -138,4 +142,22 @@ void RunTestCases(IServiceProvider services)
     var stats = appointmentService.GetAppointmentStats();
     Console.WriteLine("Appointment Stats:");
     Console.WriteLine($"Last Hour: {stats.LastHour}, Last Week: {stats.LastWeek}, Last Month: {stats.LastMonth}");
+}
+
+void RunSetup(IServiceProvider services)
+{
+	var queueService = services.GetRequiredService<QueueService>();
+	var appointmentService = services.GetRequiredService<AppointmentService>();
+	var deskService = services.GetRequiredService<DeskService>();
+
+	Console.WriteLine("=== Setup ===");
+
+	Console.WriteLine("Adding Puesto 1");
+	deskService.AddDeskIfNotExists("Puesto 1");
+
+	Console.WriteLine("Adding Puesto 2");
+	deskService.AddDeskIfNotExists("Puesto 2");
+
+	Console.WriteLine("Adding Puesto 2");
+	deskService.AddDeskIfNotExists("Puesto 3");
 }

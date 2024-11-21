@@ -18,7 +18,7 @@
 
 	protected override void OnInitialized()
 	{
-		timer = new Timer(1000);
+		timer = new Timer(200);
 		timer.Elapsed += UpdateQueue;
 		timer.AutoReset = true;
 		timer.Enabled = true;
@@ -42,7 +42,7 @@
 
 				}
 
-				var offices = new[] { "Officina 1"};
+				var offices = new[] { "Oficina 1"};
 
 				waiting = offices.Select(o => new DataItem {
 						Office = o,
