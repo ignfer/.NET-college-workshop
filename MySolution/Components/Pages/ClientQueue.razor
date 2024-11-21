@@ -54,7 +54,7 @@
 					.Where(item => item.EndDate == null)
 					.Select(item => new OngoingClientItem
 					{
-						Id = item.Id,
+						Id = item.Queue.Id,
 						CINumber = item.Queue.CINumber,
 						DeskName = item.Desk.Name
 					})
@@ -65,7 +65,7 @@
 				var lastAppointment = AppointmentService.GetLastCalledAppointment();
 				if (lastAppointment != null)
 				{
-					LastAppointment = ($"{lastAppointment?.Id} - {lastAppointment.Queue?.CINumber}");
+					LastAppointment = ($"{lastAppointment?.Queue.Id} - {lastAppointment.Queue?.CINumber}");
 					LastAppointmentDesk = ($"{lastAppointment.Desk.Name}");
 				}
 
